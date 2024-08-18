@@ -6,7 +6,12 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>290138_document_extension_file_format_paper_icon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="290138_document_extension_file_format_paper_icon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="epplus" Version="7.2.2" />
