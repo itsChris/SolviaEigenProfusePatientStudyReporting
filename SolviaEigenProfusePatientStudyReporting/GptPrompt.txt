@@ -1,0 +1,26 @@
+﻿we are building: 
+
+1 WPF .NET Core 8.0 Windows application
+2 the application will use serilog for logging. logging will be configured using appsettings.json. daily log file, max 60 days, max 10mb
+3 Connect to a MariaDB database on Hostname radsrv013.radioviva.local, port 3306, username: root, password: WillBeChangedLater, database: profuse. columns: RecDateTime, TimeLastUpdate, PatDicom, PatDOB, PatID PatGender, PatAge, PatWeight
+4 all properties to connect to the database will be stored in an application configuration file (appsettings.json)
+5 the WPF application will load instantly. 
+6 the wpf application will follow mvvm pattern
+7 the WPF application will have two comboboxes (incl labels) to filter the list of patients for year and month. the availble years and month will be determined by the column TimeLastUpdate
+8 the WPF applicacation will query the database table: patients, only once the user selects a year and month from the comboboxes. the query will consider the selected year and month and will return the list of patients. the list of patients will be displayed in a grid.
+9 he WPF application will have a button to export the list of patients to a CSV file.
+
+1 to 9 are deliverables.
+
+you will provide all the required information, source code and instructions step by step. 
+after every step i will test the code and give you feedback. 
+if a deliverable is considered not working, i will let you know about that and you will fix it until it works.
+
+the application will be a sold to a client, it must follow the best and modern principles of software development. 
+dependency injection, shall be used, whenever this is considered useful.
+the code must be clean, well documented and easy to read. 
+the application must be easy to install and configure.
+all dependencies must be included in the project, they will be added using install-package cmdlet.
+
+so proceed to step 1 of 9. 
+
