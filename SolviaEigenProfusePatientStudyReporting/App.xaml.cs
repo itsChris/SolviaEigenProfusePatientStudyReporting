@@ -5,15 +5,11 @@ using Serilog;
 using SolviaEigenProfusePatientStudyReporting.Services;
 using SolviaEigenProfusePatientStudyReporting.ViewModels;
 using SolviaEigenProfusePatientStudyReporting.Views;
-using System.IO;
 using System.Windows;
-
+using System.Windows.Threading;
 
 namespace SolviaEigenProfusePatientStudyReporting
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
         private readonly IHost _host;
@@ -34,6 +30,11 @@ namespace SolviaEigenProfusePatientStudyReporting
                     configuration.ReadFrom.Configuration(context.Configuration);
                 })
                 .Build();
+
+            // Global exception handling
+            DispatcherUnhandledException += OnDispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+            TaskScheduler.UnobservedTaskException += OnUnobservedTaskException;
         }
 
         private void ConfigureServices(IConfiguration configuration, IServiceCollection services)
@@ -57,6 +58,25 @@ namespace SolviaEigenProfusePatientStudyReporting
             await _host.StopAsync();
             _host.Dispose();
             base.OnExit(e);
+        }
+
+        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+        {
+            Log.Error(e.Exception, "An unhandled UI exception occurred");
+            MessageBox.Show("An unexpected error occurred. The application will be closed.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            e.Handled = true; // Prevents the application from crashing
+        }
+
+        private void OnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Log.Fatal((Exception)e.ExceptionObject, "A non-UI thread exception occurred");
+            MessageBox.Show("A critical error occurred. The application will be closed.", "Critical Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+
+        private void OnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            Log.Error(e.Exception, "An unobserved task exception occurred");
+            e.SetObserved(); // Prevents the application from crashing
         }
     }
 }

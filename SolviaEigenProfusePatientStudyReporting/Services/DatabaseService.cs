@@ -2,8 +2,10 @@
 using MySql.Data.MySqlClient;
 using Serilog;
 using SolviaEigenProfusePatientStudyReporting.Models;
+using SolviaEigenProfusePatientStudyReporting.Views;
 using System.Data;
 using System.Diagnostics;
+using System.Windows;
 
 namespace SolviaEigenProfusePatientStudyReporting.Services
 {
@@ -14,6 +16,32 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
         public DatabaseService(string connectionString)
         {
             _connectionString = connectionString;
+            TestDbConnection();
+        }
+
+        private void TestDbConnection()
+        {
+            try
+            {
+                Log.Verbose("Testing database connection...");
+
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    Log.Information("Database connection successful.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to connect to the database.");
+
+                // Show the custom message box
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    var messageBox = new CustomMessageBox();
+                    messageBox.ShowDialog();
+                });
+            }
         }
 
         public async Task<List<int>> GetAvailableYearsAsync()
@@ -34,7 +62,9 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                         {
                             while (await reader.ReadAsync())
                             {
-                                years.Add(reader.GetInt32("Year"));
+                                int year = reader.GetInt32("Year");
+                                years.Add(year);
+                                Log.Verbose("Retrieved year: {Year}", year);
                             }
                         }
                     }
@@ -42,7 +72,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Log.Error(ex, "An error occurred while fetching available years.");
             }
 
             return years;
@@ -68,7 +98,9 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                         {
                             while (await reader.ReadAsync())
                             {
-                                months.Add(reader.GetInt32("Month"));
+                                int month = reader.GetInt32("Month");
+                                months.Add(month);
+                                Log.Verbose("Retrieved month: {Month} for year: {Year}", month, year);
                             }
                         }
                     }
@@ -76,7 +108,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Log.Error(ex, "An error occurred while fetching available months for year {Year}.", year);
             }
 
             return months;
@@ -107,7 +139,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                         {
                             while (await reader.ReadAsync())
                             {
-                                Debug.WriteLine($"RecDateTime: {reader["RecDateTime"]}, " +
+                                Log.Verbose($"RecDateTime: {reader["RecDateTime"]}, " +
                                     $"TimeLastUpdate: {reader["TimeLastUpdate"]}, " +
                                     $"PatDicom: {reader["converted_patdicom"]}, " +
                                     $"PatDOB: {reader["PatDOB"]}, " +
@@ -129,6 +161,9 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                                 p.PatWeight = reader["PatWeight"] as string ?? string.Empty;
                                 p.PatComments = reader["converted_patcomments"] as string ?? string.Empty;
                                 patients.Add(p);
+
+                                Log.Verbose("Retrieved patient: {PatientID}, {PatDicom}", p.PatID, p.PatDicom);
+
                             }
                         }
                     }
@@ -137,7 +172,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
             catch (Exception ex)
             {
                 // Handle exceptions
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Log.Error(ex, "An error occurred while fetching patients for year {Year}.", year);
             }
 
             return patients;
@@ -171,7 +206,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                             while (await reader.ReadAsync())
                             {
 
-                                Debug.WriteLine($"RecDateTime: {reader["RecDateTime"]}, " +
+                                Log.Verbose($"RecDateTime: {reader["RecDateTime"]}, " +
                                     $"TimeLastUpdate: {reader["TimeLastUpdate"]}, " +
                                     $"PatDicom: {reader["converted_patdicom"]}, " +
                                     $"PatDOB: {reader["PatDOB"]}, " +
@@ -193,6 +228,9 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
                                 p.PatWeight = reader["PatWeight"] as string ?? string.Empty;
                                 p.PatComments = reader["converted_patcomments"] as string ?? string.Empty;
                                 patients.Add(p);
+
+                                Log.Verbose("Retrieved patient: {PatientID}, {PatDicom} for month {Month} and year {Year}", p.PatID, p.PatDicom, month, year);
+
                             }
                         }
                     }
@@ -201,7 +239,7 @@ namespace SolviaEigenProfusePatientStudyReporting.Services
             catch (Exception ex)
             {
                 // Handle exceptions (logging, etc.)
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                Log.Error(ex, "An error occurred while fetching patients for year {Year} and month {Month}.", year, month);
             }
 
             return patients;

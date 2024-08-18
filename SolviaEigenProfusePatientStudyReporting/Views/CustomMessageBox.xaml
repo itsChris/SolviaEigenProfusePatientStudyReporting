@@ -1,0 +1,21 @@
+﻿<Window x:Class="SolviaEigenProfusePatientStudyReporting.Views.CustomMessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Database Connection Error" WindowStyle="None" ResizeMode="NoResize" SizeToContent="WidthAndHeight" Background="#2C3E50">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Database Connection Error" FontWeight="Bold" FontSize="16" Foreground="White" Grid.Row="0" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+
+        <TextBlock Text="Failed to connect to the database." FontSize="14" Foreground="White" Grid.Row="1" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+
+        <TextBlock Text="Please call +41 44 885 00 10 and ask for assistance." FontSize="14" Foreground="White" Grid.Row="2" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+
+        <Button Content="OK" Width="100" Grid.Row="3" HorizontalAlignment="Center" Background="#3498DB" Foreground="White" Click="OkButton_Click" />
+    </Grid>
+</Window>
