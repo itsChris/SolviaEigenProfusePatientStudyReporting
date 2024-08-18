@@ -39,7 +39,7 @@ It retrieves patient study records stored in the `patients` table, with the foll
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/itschris/patient-study-records.git
+   git clone https://github.com/itsChris/SolviaEigenProfusePatientStudyReporting.git
    cd patient-study-records
    ```
 
@@ -91,8 +91,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [MariaDB](https://mariadb.org/) for database support.
 ```
 
-### Additional Notes:
-- Replace `"yourusername"` in the `git clone` URL with your actual GitHub username.
-- Customize any sections with specific details about your project or environment as needed.
-
-This `README.md` provides a clear overview of your project, its features, installation instructions, and usage details. Let me know if there's anything more you'd like to add or modify!
